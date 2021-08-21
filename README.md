@@ -1,2 +1,4 @@
 # Spwn-Mazegen-With-Player-Collision
-Generates a maze using awsloth's maze generator (https://github.com/awsloth/spwn-mazegen) and lets you control a character to play it that reacts to walls
+Generates a maze using awsloth's maze generator (https://github.com/awsloth/spwn-mazegen) and lets you control a character to play it. The player will also react to walls.
+
+To play, create and beat an empty geometry dash level. Make sure this level is at the top of your levels list. Then (if you have installed spwn from https://github.com/Spu7Nix/SPWN-language/releases/latest) open up your command prompt on your respective operative system. In the command prompt type 'spwn build "(the location of the file)/MazeWithCollision.spwn"' If you are unsure of the location of your file, if you are on windows go to the file in file explorer and click the rectangular bar that is above the files and to the right of the undo and redo buttons. Then copy the stuff highlighted in blue, that is your file location (if you are not on windows then look it up). 

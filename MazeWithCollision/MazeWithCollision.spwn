@@ -1,0 +1,299 @@
+random = import rand
+extract obj_props
+gs = import gamescene
+invis = 1g
+invis.alpha(0)
+lock = 3g
+spike = 4g
+direc = counter(1)
+let blocksGrid = []
+let localGrid = counter(1)
+
+let n = $.get_input("Size: ")
+n = n.substr(0, n.length-1) as @number
+
+let maze = []
+for i in ..n {
+    let row = []
+    for j in ..n {
+        row.push(0)
+    }
+    maze.push(row)
+}
+
+maze[0][0] = 1
+
+let x = 0
+let y = 0
+let px = 0
+let py = 0
+let options = []
+
+find_path = (grid, x, y){
+    let choices = []
+    if (x >= 2 && grid[y][x-2] == 0) {
+        choices.push([x-2, y])
+    }
+    if (y >= 2 && grid[y-2][x] == 0) {
+        choices.push([x, y-2])
+    }
+    if (x <= grid.length-3 && grid[y][x+2] == 0) {
+        choices.push([x+2, y])
+    }
+    if (y <= grid.length-3 && grid[y+2][x] == 0) {
+        choices.push([x, y+2])
+    }
+    return choices
+}
+
+let stack = [[0, 0]]
+
+while (stack.length > 0) {
+    px = x
+    py = y
+    options = find_path(maze, x, y)
+    if (options.length > 0) {
+        // Add random bit here
+        let choice = random.choice(find_path(maze, x, y))
+        x = choice[0]
+        y = choice[1]
+        stack.push([x, y])
+        if px == x {
+            let y_pos = y+py
+            y_pos /%=2
+            maze[y_pos][x] = 1
+            maze[y][x] = 1
+        }
+        else {
+            let x_pos = x+px
+            x_pos /%= 2
+            maze[y][x_pos] = 1
+            maze[y][x] = 1
+        }
+    }
+    else {
+        val = stack.pop()
+        x = val[0]
+        y = val[1]
+    }
+}
+
+for y_pos in ..n {
+    for x_pos in ..n {
+        if (maze[y_pos][x_pos] == 0){
+            $.add(obj {
+                OBJ_ID:211,
+                X:(x_pos*30)+15,
+                Y:(y_pos*30)+135,
+                GROUPS:[2g, lock]
+            })
+            blocksGrid.push((x_pos + 1) + (y_pos * (n + 1)))
+        }
+    }
+}
+
+n += 1
+
+if n - 1 != 20 {
+    for i in ..n { // Bottom wall
+        $.add(obj {
+            OBJ_ID:211,
+            X:(i*30)+15,
+            Y:105,
+            GROUPS:[2g, lock]
+        })
+    }
+
+    for i in ..n {
+        $.add(obj { // Left wall
+            OBJ_ID:211,
+            X:-15,
+            Y:(i*30)+135,
+            GROUPS:[2g, lock]    
+        })
+        blocksGrid.push(i*n)
+    }
+} else {
+    for i in ..(n - 1) { // Bottom wall
+        $.add(obj {
+            OBJ_ID:211,
+            X:(i*30)+15,
+            Y:105,
+            GROUPS:[2g, lock]
+        })
+    }
+
+    for i in ..(n - 1) {
+        $.add(obj { // Left wall
+            OBJ_ID:211,
+            X:-15,
+            Y:(i*30)+135,
+            GROUPS:[2g, lock]    
+        })
+        blocksGrid.push(i*n)
+    }
+}
+
+if n - 1 != 20 {
+    for i in ..n {
+        $.add(obj { // Far top wall
+            OBJ_ID:211,
+            X:(i*30)+15,
+            Y:(n*30)+105,
+            GROUPS:[2g, lock]    
+        })
+        blocksGrid.push(((n*n)-n)+i)
+    }
+
+    for i in ..n {
+        $.add(obj { // Far right wall
+            OBJ_ID:211,
+            X:(n*30)-15,
+            Y:(i*30)+135,
+            GROUPS:[2g, lock]    
+        })
+        blocksGrid.push((i*n)+n)
+    }
+}
+
+$.add(obj {
+        OBJ_ID:211,
+        X:-15,
+        Y:105,
+        GROUPS:[2g, lock]
+    })
+
+$.add(obj {
+    OBJ_ID:211,
+    X:50000,
+    Y:500,
+    GROUPS:invis
+})
+
+$.add(obj {
+    OBJ_ID:8,
+    X:120,
+    Y:25,
+    GROUPS:[lock, spike, invis]
+})
+
+$.add(obj{
+    OBJ_ID: 211,
+    X: 15,
+    Y: 135,
+    COLOR: 2c,
+    Z_LAYER: -8,
+    DONT_FADE: true, DONT_ENTER: true,
+    GROUPS: [9g, lock, 10g] 
+})
+
+$.add(obj{
+    OBJ_ID: 1603,
+    X: 45,
+    Y: 135,
+    DONT_FADE: true, DONT_ENTER: true,
+    GROUPS: [5g, 9g, lock] 
+})
+
+$.add(obj{
+    OBJ_ID: 1603,
+    X: 15,
+    Y: 105,
+    ROTATION: 90,
+    DONT_FADE: true, DONT_ENTER: true,
+    GROUPS: [6g, 9g, lock] 
+})
+6g.toggle_off()
+
+$.add(obj{
+    OBJ_ID: 1603,
+    X: -15,
+    Y: 135,
+    ROTATION: 180,
+    DONT_FADE: true, DONT_ENTER: true,
+    GROUPS: [7g, 9g, lock] 
+})
+7g.toggle_off()
+
+$.add(obj{
+    OBJ_ID: 1603,
+    X: 15,
+    Y: 165,
+    ROTATION: 270,
+    DONT_FADE: true, DONT_ENTER: true,
+    GROUPS: [8g, 9g, lock] 
+})
+8g.toggle_off()
+
+2c.set(65, 186, 255, 0)
+lock.lock_to_player(lock_y = false, duration = 330)
+
+collisionFunc = !{
+    -> if direc == 1 {
+        localGrid -= 1
+        -> 2g.move(10, 0, 0.2)
+    } 
+    -> if direc == 2 {
+        localGrid += n
+        -> 2g.move(0, -10, 0.2)
+    } 
+    -> if direc == 3 {
+        localGrid += 1
+        -> 2g.move(-10, 0, 0.2)
+    } 
+    -> if direc == 4 {
+        localGrid -= n
+        -> 2g.move(0, 10, 0.2)
+    } 
+}
+
+gs.button_b().on_triggered(!{
+    -> if direc == 1 {
+        localGrid += 1
+        -> 2g.move(-10, 0, 0.2)
+    } 
+    -> if direc == 2 {
+        localGrid -= n
+        -> 2g.move(0, 10, 0.2)
+    } 
+    -> if direc == 3 {
+        localGrid -= 1
+        -> 2g.move(10, 0, 0.2)
+    } 
+    -> if direc == 4 {
+        localGrid += n
+        -> 2g.move(0, -10, 0.2)
+    } 
+    if blocksGrid.any(el => localGrid == el) { // Checks if any of the grid positions of the blocks are equal to the playersGridPosition
+        wait()
+        collisionFunc!
+    } else if localGrid < 1 {
+        wait()
+        collisionFunc! 
+    }
+})
+
+gs.button_a().on_triggered(!{
+
+    if direc == 4 {
+        8g.toggle_off()
+        5g.toggle_on()
+    } else if direc == 1 {
+        5g.toggle_off()
+        6g.toggle_on()
+    } else if direc == 2 {
+        6g.toggle_off()
+        7g.toggle_on()
+    } else if direc == 3 {
+        7g.toggle_off()
+        8g.toggle_on()
+    } else {}
+
+    if direc < 4 {
+        wait()
+        direc += 1
+    } else {
+        wait()
+        direc -= 3
+    }
+})

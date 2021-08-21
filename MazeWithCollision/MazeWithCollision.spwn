@@ -94,7 +94,7 @@ for y_pos in ..n {
 
 n += 1
 
-if n != 21 || n != 11{
+if n - 1 != 20 && n - 1 != 10{
     for i in ..n { // Bottom wall
         $.add(obj {
             OBJ_ID:211,
@@ -134,7 +134,7 @@ if n != 21 || n != 11{
     }
 }
 
-if n != 21 || n != 11{
+if n - 1 != 20 && n - 1 != 10{
     for i in ..n {
         $.add(obj { // Far top wall
             OBJ_ID:211,

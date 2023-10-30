@@ -13,9 +13,9 @@ let n = $.get_input("Size: ")
 n = n.substr(0, n.length-1) as @number
 
 let maze = []
-for i in ..n {
+for i in 0..n {
     let row = []
-    for j in ..n {
+    for j in 0..n {
         row.push(0)
     }
     maze.push(row)
@@ -78,8 +78,8 @@ while (stack.length > 0) {
     }
 }
 
-for y_pos in ..n {
-    for x_pos in ..n {
+for y_pos in 0..n {
+    for x_pos in 0..n {
         if (maze[y_pos][x_pos] == 0){
             $.add(obj {
                 OBJ_ID:211,
@@ -95,7 +95,7 @@ for y_pos in ..n {
 n += 1
 
 if n - 1 != 20 && n - 1 != 10{
-    for i in ..n { // Bottom wall
+    for i in 0..n { // Bottom wall
         $.add(obj {
             OBJ_ID:211,
             X:(i*30)+15,
@@ -104,7 +104,7 @@ if n - 1 != 20 && n - 1 != 10{
         })
     }
 
-    for i in ..n {
+    for i in 0..n {
         $.add(obj { // Left wall
             OBJ_ID:211,
             X:-15,
@@ -114,7 +114,7 @@ if n - 1 != 20 && n - 1 != 10{
         blocksGrid.push(i*n)
     }
 } else {
-    for i in ..(n - 1) { // Bottom wall
+    for i in 0..(n - 1) { // Bottom wall
         $.add(obj {
             OBJ_ID:211,
             X:(i*30)+15,
@@ -123,7 +123,7 @@ if n - 1 != 20 && n - 1 != 10{
         })
     }
 
-    for i in ..(n - 1) {
+    for i in 0..(n - 1) {
         $.add(obj { // Left wall
             OBJ_ID:211,
             X:-15,
@@ -135,7 +135,7 @@ if n - 1 != 20 && n - 1 != 10{
 }
 
 if n - 1 != 20 && n - 1 != 10{
-    for i in ..n {
+    for i in 0..n {
         $.add(obj { // Far top wall
             OBJ_ID:211,
             X:(i*30)+15,
@@ -145,7 +145,7 @@ if n - 1 != 20 && n - 1 != 10{
         blocksGrid.push(((n*n)-n)+i)
     }
 
-    for i in ..n {
+    for i in 0..n {
         $.add(obj { // Far right wall
             OBJ_ID:211,
             X:(n*30)-15,
